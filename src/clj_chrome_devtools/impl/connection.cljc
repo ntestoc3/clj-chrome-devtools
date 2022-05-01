@@ -79,8 +79,9 @@
               ;; Has id: this is a response to our previously sent command
               (let [callback (@requests id)]
                 (swap! requests dissoc id)
-                (submit! #(callback json-msg)))
-              ;; This is an event
+                (submit! #(callback json-msg))))
+            ;; This is an event
+            (when (seq json-msg)
               (publish-event @event-listeners-atom json-msg)))
           (catch Throwable t
             (log/error "Exception in devtools WebSocket receive, msg: " msg
